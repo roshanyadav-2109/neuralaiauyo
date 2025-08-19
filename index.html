@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neural AI - Automation & Development</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Zen Dots & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Custom Styles & Animations -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+
+        .font-zendots {
+            font-family: 'Zen Dots', sans-serif;
+        }
+
+        /* --- 3D Animated Hero Section --- */
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Text Styling & Glow Animation --- */
+        .neural-text {
+            color: #00ffb2;
+            text-shadow: 0 0 8px rgba(0, 255, 178, 0.8), 0 0 16px rgba(0, 255, 178, 0.8);
+            animation: pulse-glow 2.5s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from {
+                text-shadow: 0 0 8px rgba(0, 255, 178, 0.7), 0 0 16px rgba(0, 255, 178, 0.7);
+            }
+            to {
+                text-shadow: 0 0 16px rgba(0, 255, 178, 1), 0 0 32px rgba(0, 255, 178, 1);
+            }
+        }
+        
+        /* --- Scroll Down Indicator --- */
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            animation: bounce 2s infinite;
+        }
+        .scroll-down-arrow {
+            width: 24px;
+            height: 24px;
+            color: #555;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -20px); }
+            60% { transform: translate(-50%, -10px); }
+        }
+
+        /* --- Tab System Styling --- */
+        .tab-button-container {
+            position: relative;
+        }
+        .tab-button {
+            transition: color 0.3s ease;
+        }
+        .tab-button.active {
+            color: #00ffb2;
+        }
+        .tab-underline {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background-color: #00ffb2;
+            transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Service Comparison Card Styling --- */
+        .comparison-card {
+            background-color: #0A0A0A;
+            border: 1px solid #27272A;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .comparison-card:hover {
+            transform: translateY(-8px);
+            border-color: #00ffb2;
+            box-shadow: 0 10px 30px rgba(0, 255, 178, 0.1);
+        }
+        .comparison-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .comparison-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .comparison-card li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .comparison-card li::before {
+            content: '✕';
+            position: absolute;
+            left: 0;
+            color: #ef4444; /* Red-500 */
+        }
+        .ai-solution li::before {
+            content: '✓';
+            color: #00ffb2; /* Custom Teal */
+        }
+        
+        /* --- Technology Card Styling with SVG Background --- */
+        .tech-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid #27272A;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-color: #050505;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .tech-card:hover {
+            transform: translateY(-8px);
+            border-color: #00ffb2;
+            box-shadow: 0 10px 30px rgba(0, 255, 178, 0.1);
+        }
+        .tech-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+            transition: opacity 0.5s ease;
+        }
+        .tech-card:hover .tech-card-bg {
+            opacity: 0.25;
+        }
+        .tech-card-content {
+            position: relative;
+            z-index: 2;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0));
+        }
+        
+        /* --- Scroll Reveal Animation --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <main>
+        <!-- =========== HERO SECTION with 3D Neuron Animation =========== -->
+        <section class="hero-section">
+            <div id="hero-canvas"></div>
+            <div class="hero-content">
+                <h1 class="font-zendots text-5xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-none">
+                    <span class="neural-text">neural</span><span class="text-white"> AI</span>
+                </h1>
+            </div>
+            <a href="#content-start" class="scroll-down">
+                <svg class="scroll-down-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </a>
+        </section>
+
+        <!-- =========== DETAILED CONTENT SECTION =========== -->
+        <section id="content-start" class="py-20 bg-black">
+            <div class="container mx-auto px-6">
+                
+                <!-- Tab Buttons -->
+                <div class="relative flex flex-wrap justify-center border-b border-zinc-800 mb-12 tab-button-container">
+                    <button class="tab-button active text-lg font-semibold py-4 px-6" onclick="openTab(event, 'services')">Our Services</button>
+                    <button class="tab-button text-lg font-semibold py-4 px-6 text-zinc-400" onclick="openTab(event, 'technology')">Our Technology</button>
+                    <button class="tab-button text-lg font-semibold py-4 px-6 text-zinc-400" onclick="openTab(event, 'benefits')">Key Benefits</button>
+                    <button class="tab-button text-lg font-semibold py-4 px-6 text-zinc-400" onclick="openTab(event, 'why-us')">Why Choose Us</button>
+                    <div id="tab-underline" class="tab-underline"></div>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="services" class="tab-content active">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white">The Evolution of Business Operations</h2>
+                        <p class="mt-4 max-w-3xl mx-auto text-lg text-zinc-400">See how our AI solutions outperform traditional methods, delivering tangible results and a significant competitive advantage.</p>
+                    </div>
+                    <div class="space-y-12">
+                        
+                        <!-- Service 1: AI Calling Agent -->
+                        <div class="comparison-card reveal">
+                            <div class="p-8">
+                                <h3 class="text-2xl font-bold text-white mb-6">AI Calling Agent (Contact Center 2.0)</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="traditional-practice">
+                                        <h4 class="text-red-400">Traditional Practice</h4>
+                                        <ul class="text-zinc-400">
+                                            <li>High operational costs from large human teams.</li>
+                                            <li>Inconsistent service quality and long wait times.</li>
+                                            <li>Limited to business hours, missing global customers.</li>
+                                            <li>Manual, error-prone call logging and data entry.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ai-solution">
+                                        <h4 class="text-teal-300">neural AI Solution</h4>
+                                        <ul class="text-zinc-300">
+                                            <li>24/7 automated support in multiple languages.</li>
+                                            <li>Consistent, high-quality interactions with voice cloning.</li>
+                                            <li>Instant, accurate CRM integration and sentiment analysis.</li>
+                                            <li>Scales instantly to handle any call volume.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-zinc-900 p-6">
+                                <p class="text-center font-semibold"><span class="text-teal-300">Impact Snapshot:</span> Reduce customer service costs by up to <span class="text-white">60%</span> and increase customer satisfaction by <span class="text-white">40%</span>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Service 2: Basic Automation Services -->
+                        <div class="comparison-card reveal">
+                            <div class="p-8">
+                                <h3 class="text-2xl font-bold text-white mb-6">Basic Automation Services</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="traditional-practice">
+                                        <h4 class="text-red-400">Traditional Practice</h4>
+                                        <ul>
+                                            <li>Repetitive, manual data entry across systems.</li>
+                                            <li>Siloed departments with inefficient handoffs.</li>
+                                            <li>High potential for human error in critical processes.</li>
+                                            <li>Slow onboarding and payroll processing.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ai-solution">
+                                        <h4 class="text-teal-300">neural AI Solution</h4>
+                                        <ul>
+                                            <li>Intelligent RPA for HR, finance, and support.</li>
+                                            <li>No-code workflow builder for custom automation.</li>
+                                            <li>Seamless integration with Slack, Teams, etc.</li>
+                                            <li>Pre-built templates for instant deployment.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-zinc-900 p-6">
+                                <p class="text-center font-semibold"><span class="text-teal-300">Impact Snapshot:</span> Increase back-office productivity by <span class="text-white">50%</span> and reduce process errors by <span class="text-white">95%</span>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Service 3: CCTV AI Monitoring -->
+                        <div class="comparison-card reveal">
+                            <div class="p-8">
+                                <h3 class="text-2xl font-bold text-white mb-6">CCTV AI Monitoring</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="traditional-practice">
+                                        <h4 class="text-red-400">Traditional Practice</h4>
+                                        <ul>
+                                            <li>Reactive security, reviewing footage after an incident.</li>
+                                            <li>Human monitoring is prone to fatigue and missed events.</li>
+                                            <li>No operational insights from video data.</li>
+                                            <li>Compliance checks are manual and time-consuming.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ai-solution">
+                                        <h4 class="text-teal-300">neural AI Solution</h4>
+                                        <ul>
+                                            <li>Proactive, real-time alerts for theft or safety breaches.</li>
+                                            <li>Emotion detection to identify customer frustration.</li>
+                                            <li>Heatmap analytics to optimize store layout and sales.</li>
+                                            <li>Automated compliance and attendance verification.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="bg-zinc-900 p-6">
+                               <p class="text-center font-semibold"><span class="text-teal-300">Impact Snapshot:</span> Increase operational efficiency by <span class="text-white">35%</span> and reduce incidents of theft and non-compliance by <span class="text-white">50%</span>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Service 4: Business Analytics System -->
+                        <div class="comparison-card reveal">
+                            <div class="p-8">
+                                <h3 class="text-2xl font-bold text-white mb-6">Business Analytics System (AI Business Brain)</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="traditional-practice">
+                                        <h4 class="text-red-400">Traditional Practice</h4>
+                                        <ul>
+                                            <li>Dashboards show historical data, not future trends.</li>
+                                            <li>Data analysis requires a team of specialists.</li>
+                                            <li>Insights are fragmented across different reports.</li>
+                                            <li>Decisions are based on gut feeling, not data.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ai-solution">
+                                        <h4 class="text-teal-300">neural AI Solution</h4>
+                                        <ul>
+                                            <li>AI Co-CEO provides actionable recommendations.</li>
+                                            <li>Predictive demand and inventory restocking.</li>
+                                            <li>Customer DNA profiling for loyalty and behavior prediction.</li>
+                                            <li>Automated meeting summaries and task assignment.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="bg-zinc-900 p-6">
+                               <p class="text-center font-semibold"><span class="text-teal-300">Impact Snapshot:</span> Improve forecast accuracy by <span class="text-white">40%</span> and boost team productivity by <span class="text-white">25%</span> through automated insights.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="technology" class="tab-content">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white">The Core of Our Intelligence</h2>
+                        <p class="mt-4 max-w-3xl mx-auto text-lg text-zinc-400">Our solutions are powered by a sophisticated blend of cutting-edge AI models and architectures, ensuring robust, scalable, and intelligent performance.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Generative AI Card -->
+                        <div class="tech-card reveal">
+                            <div class="tech-card-bg">
+                                <svg width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <filter id="glow">
+                                            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                                            <feMerge>
+                                                <feMergeNode in="coloredBlur"/>
+                                                <feMergeNode in="SourceGraphic"/>
+                                            </feMerge>
+                                        </filter>
+                                    </defs>
+                                    <g filter="url(#glow)" stroke="#00ffb2" stroke-width="0.5" fill="none">
+                                        <path d="M0 100 C 100 0, 300 200, 400 100 S 300 0, 200 100 S 100 200, 0 100">
+                                            <animateTransform attributeName="transform" type="translate" values="0 0; 0 200; 0 0" dur="10s" repeatCount="indefinite" />
+                                        </path>
+                                        <path d="M400 300 C 300 400, 100 200, 0 300 S 100 400, 200 300 S 300 200, 400 300">
+                                            <animateTransform attributeName="transform" type="translate" values="0 0; 0 -200; 0 0" dur="12s" repeatCount="indefinite" />
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="tech-card-content">
+                                <h3 class="text-2xl font-bold text-white mb-2">Generative AI & LLMs</h3>
+                                <p class="text-zinc-300">We leverage Large Language Models for tasks like AI-generated marketing copy, automated call summaries, and creating natural conversations with our AI agents.</p>
+                            </div>
+                        </div>
+
+                        <!-- Computer Vision Card -->
+                        <div class="tech-card reveal reveal-delay-1">
+                            <div class="tech-card-bg">
+                                <svg width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                                    <g stroke="#00ffb2" stroke-width="1" fill="none">
+                                        <circle cx="200" cy="200" r="100" />
+                                        <circle cx="200" cy="200" r="50" />
+                                        <line x1="200" y1="0" x2="200" y2="400">
+                                            <animate attributeName="stroke-dasharray" from="0 400" to="400 0" dur="4s" repeatCount="indefinite" />
+                                        </line>
+                                        <line x1="0" y1="200" x2="400" y2="200">
+                                             <animate attributeName="stroke-dasharray" from="0 400" to="400 0" dur="4s" begin="2s" repeatCount="indefinite" />
+                                        </line>
+                                    </g>
+                                    <circle cx="150" cy="150" r="3" fill="#00ffb2">
+                                        <animateMotion path="M0,0 L50,50 L-50,50 Z" dur="6s" repeatCount="indefinite" />
+                                    </circle>
+                                    <circle cx="250" cy="250" r="2" fill="#00ffb2">
+                                         <animateMotion path="M0,0 L-50,-50 L50,-50 Z" dur="6s" repeatCount="indefinite" />
+                                    </circle>
+                                </svg>
+                            </div>
+                            <div class="tech-card-content">
+                                <h3 class="text-2xl font-bold text-white mb-2">Computer Vision</h3>
+                                <p class="text-zinc-300">Our CCTV solutions use advanced computer vision models to analyze video streams in real-time for theft detection, compliance monitoring, and customer behavior analysis.</p>
+                            </div>
+                        </div>
+
+                        <!-- Predictive Analytics Card -->
+                        <div class="tech-card reveal reveal-delay-2">
+                             <div class="tech-card-bg">
+                                <svg width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                                    <polyline points="50,350 100,300 150,320 200,250 250,200 300,150" fill="none" stroke="#00ffb2" stroke-width="2" stroke-dasharray="500" stroke-dashoffset="500">
+                                        <animate attributeName="stroke-dashoffset" from="500" to="0" dur="4s" repeatCount="indefinite" />
+                                    </polyline>
+                                    <polyline points="300,150 350,100" fill="none" stroke="#00ffb2" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100" opacity="0.5">
+                                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" begin="4s" repeatCount="indefinite" />
+                                    </polyline>
+                                    <circle cx="350" cy="100" fill="#00ffb2">
+                                        <animate attributeName="r" from="0" to="4" dur="0.5s" begin="5s" repeatCount="indefinite" />
+                                    </circle>
+                                </svg>
+                            </div>
+                            <div class="tech-card-content">
+                                <h3 class="text-2xl font-bold text-white mb-2">Predictive Analytics</h3>
+                                <p class="text-zinc-300">By analyzing historical data, our AI Business Brain and Marketing suites can forecast future trends, predict customer churn, and automate inventory management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="benefits" class="tab-content">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white">The Tangible Benefits of AI Integration</h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg text-zinc-400">Implementing our solutions drives measurable improvements across your business.</p>
+                    </div>
+                    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-3">Drastic Efficiency Gains</h4>
+                            <p class="text-zinc-400">Automate thousands of hours of manual work, freeing up your team to focus on high-value strategic initiatives.</p>
+                        </div>
+                         <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal reveal-delay-1">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-3">Significant Cost Reduction</h4>
+                            <p class="text-zinc-400">Lower operational costs by optimizing processes, reducing waste, and minimizing human error in key workflows.</p>
+                        </div>
+                         <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal reveal-delay-2">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-3">Enhanced Customer Experience</h4>
+                            <p class="text-zinc-400">Provide 24/7, personalized support and gain deep insights into customer behavior to increase satisfaction and loyalty.</p>
+                        </div>
+                         <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal reveal-delay-3">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-3">Data-Driven Decisions</h4>
+                            <p class="text-zinc-400">Leverage predictive analytics and AI-powered insights to make smarter, faster business decisions with confidence.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="why-us" class="tab-content">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white">Our Unique Market Differentiators</h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg text-zinc-400">We are not just a vendor; we are your strategic partner in innovation.</p>
+                    </div>
+                    <div class="max-w-5xl mx-auto space-y-8">
+                        <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal">
+                            <h4 class="text-xl font-semibold text-white mb-3">1. Unified & Interconnected Ecosystem</h4>
+                            <p class="text-zinc-400">Unlike siloed solutions, all our products work together seamlessly on one platform. Data from your CCTV can inform your marketing campaigns, and insights from your calling agent can refine your business analytics. This creates a powerful, compounding effect on your business intelligence.</p>
+                        </div>
+                        <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal reveal-delay-1">
+                            <h4 class="text-xl font-semibold text-white mb-3">2. Action-Oriented AI, Not Just Analytics</h4>
+                            <p class="text-zinc-400">Standard dashboards show you what happened. Our AI Co-CEO tells you what to do next. Our systems are designed to provide clear, actionable recommendations and can even be configured to trigger automated workflows based on its findings, moving your business from reactive to proactive.</p>
+                        </div>
+                        <div class="bg-[#0A0A0A] border border-zinc-800 p-8 rounded-xl reveal reveal-delay-2">
+                            <h4 class="text-xl font-semibold text-white mb-3">3. Rapid Deployment with AI-Native Architecture</h4>
+                            <p class="text-zinc-400">We build on future-proof, AI-native stacks like Supabase, enabling us to reduce deployment time from months to weeks. Our use of pre-built models and workflow templates means you see a return on your investment faster than with any traditional development approach.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- =========== FOOTER =========== -->
+        <footer class="bg-black border-t border-zinc-900 py-12">
+            <div class="container mx-auto px-6 text-center">
+                 <div class="flex items-center justify-center space-x-2 mb-4">
+                    <h3 class="font-zendots text-2xl tracking-wider">
+                        <span class="neural-text">neural</span><span class="text-white"> AI</span>
+                    </h3>
+                </div>
+                <p class="text-zinc-500 text-sm">
+                    &copy; 2024 neural AI. Engineering the Future of Automation.
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Tab Navigation & Underline ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabUnderline = document.getElementById('tab-underline');
+
+            function updateUnderline(activeButton) {
+                if (!activeButton) return;
+                tabUnderline.style.left = `${activeButton.offsetLeft}px`;
+                tabUnderline.style.width = `${activeButton.offsetWidth}px`;
+            }
+
+            // Set initial underline position
+            const initialActiveTab = document.querySelector('.tab-button.active');
+            if(initialActiveTab) {
+                // Use a slight delay to ensure layout is calculated
+                setTimeout(() => updateUnderline(initialActiveTab), 50);
+            }
+
+            window.openTab = function(event, tabName) {
+                let i, tabcontent, tabbuttons;
+                tabcontent = document.getElementsByClassName("tab-content");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tabbuttons = document.getElementsByClassName("tab-button");
+                for (i = 0; i < tabbuttons.length; i++) {
+                    tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+                }
+                document.getElementById(tabName).style.display = "block";
+                event.currentTarget.className += " active";
+                updateUnderline(event.currentTarget);
+            }
+
+            // --- Scroll Reveal Animation ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(elem => {
+                revealObserver.observe(elem);
+            });
+
+            // --- Three.js 3D "Digital Neuron" Hero Animation ---
+            const container = document.getElementById('hero-canvas');
+            if (!container) return;
+
+            let scene, camera, renderer, brainParticles, lines;
+            let mouseX = 0, mouseY = 0;
+            let windowHalfX = window.innerWidth / 2;
+            let windowHalfY = window.innerHeight / 2;
+
+            function init() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 300;
+
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setClearColor(0x000000, 0);
+                container.appendChild(renderer.domElement);
+
+                const particleCount = 2000;
+                const positions = new Float32Array(particleCount * 3);
+                const particleGeometry = new THREE.BufferGeometry();
+
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(Math.random() * 2 - 1);
+                    const radius = 100 + Math.random() * 50;
+                    positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+                    positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                    positions[i3 + 2] = radius * Math.cos(phi);
+                }
+                particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const particleMaterial = new THREE.PointsMaterial({
+                    color: 0x00ffb2,
+                    size: 1.2,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                brainParticles = new THREE.Points(particleGeometry, particleMaterial);
+                scene.add(brainParticles);
+
+                const lineGeometry = new THREE.BufferGeometry();
+                const linePositions = [];
+                const connections = 3000;
+                for (let i = 0; i < connections; i++) {
+                    const p1 = Math.floor(Math.random() * particleCount);
+                    const p2 = Math.floor(Math.random() * particleCount);
+                    linePositions.push(positions[p1 * 3], positions[p1 * 3 + 1], positions[p1 * 3 + 2]);
+                    linePositions.push(positions[p2 * 3], positions[p2 * 3 + 1], positions[p2 * 3 + 2]);
+                }
+                lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+                
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: 0x00ffb2,
+                    transparent: true,
+                    opacity: 0.05
+                });
+                lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+                scene.add(lines);
+
+                document.addEventListener('mousemove', onDocumentMouseMove, false);
+                window.addEventListener('resize', onWindowResize, false);
+            }
+
+            function onWindowResize() {
+                windowHalfX = window.innerWidth / 2;
+                windowHalfY = window.innerHeight / 2;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                render();
+            }
+
+            function render() {
+                const time = Date.now() * 0.0001;
+                
+                // Make camera follow mouse more directly
+                camera.position.x += (mouseX * 0.2 - camera.position.x) * 0.02;
+                camera.position.y += (-mouseY * 0.2 - camera.position.y) * 0.02;
+                camera.lookAt(scene.position);
+
+                brainParticles.rotation.y = time;
+                lines.rotation.y = time;
+
+                renderer.render(scene, camera);
+            }
+
+            init();
+            animate();
+        });
+    </script>
+</body>
+</html>
